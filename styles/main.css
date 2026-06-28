@@ -13,6 +13,7 @@ body {
     color: #333;
 }
 
+/* HOME PAGE START ================================================ */
 /* NAVIGASI ======================================================= */
 header {
     background-color: #3E2723;
@@ -204,7 +205,7 @@ nav ul li a:hover {
     color: #FF8F00;
 }
 
-/* FOOTER ========================================================= */
+/* FOOTER =========================================================== */
 footer {
     background-color: #3E2723;
     color: #D7CCC8;
@@ -212,3 +213,98 @@ footer {
     padding: 16px 20px;
     font-size: 14px;
 }
+/* HOME PAGE END ==================================================== */
+
+/* PRODUCT PAGE START =============================================== */
+.products-header {
+    background-color: #4E342E;
+    color: #EFEBE9;
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.products-header h1 {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+.products-list {
+    max-width: 1100px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+/* PRODUCT PAGE END =================================================== */
+
+/* CERITA KAMI & CONTACT START ======================================== */
+.page-header {
+    background-color: #4E342E;
+    color: #EFEBE9;
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.page-header h1 {
+    font-size: 36px;
+}
+
+.page-content {
+    max-width: 1100px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+
+/* CERITA KAMI ================================================ */
+.cerita-lengkap {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.cerita-teks-lengkap {
+    flex: 1;
+}
+
+.cerita-teks-lengkap p {
+    margin-bottom: 16px;
+    line-height: 1.8;
+}
+
+.cerita-gambar-lengkap {
+    flex: 1;
+}
+
+.cerita-gambar-lengkap img {
+    width: 100%;
+    border-radius: 8px;
+    display: block;
+}
+
+/* CONTACT ========================================================= */
+.contact-detail {
+    text-align: center;
+}
+
+.contact-detail ul {
+    list-style: none;
+    margin-top: 24px;
+}
+
+.contact-detail ul li {
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.contact-detail ul li strong {
+    color: #3E2723;
+}
+
+.contact-detail ul li a {
+    color: #FF8F00;
+    text-decoration: none;
+}
+
+.contact-detail ul li a:hover {
+    text-decoration: underline;
+}
+/* CERITA KAMI & CONTACT END =========================================== */
+
