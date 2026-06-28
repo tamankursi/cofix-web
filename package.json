@@ -1,0 +1,28 @@
+{
+  "name": "cofix-web",
+  "version": "1.0.0",
+  "description": "Proyek website untuk kedai kopi Cofix.\r Dibangun dengan React, Tailwind CSS, Supabase, dan Midtrans.",
+  "main": "index.js",
+ "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tamankursi/cofix-web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tamankursi/cofix-web/issues"
+  },
+  "homepage": "https://github.com/tamankursi/cofix-web#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.108.2"
+  },
+  "devDependencies": {
+    "vite": "^8.1.0"
+  }
+}

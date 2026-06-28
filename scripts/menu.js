@@ -1,26 +1,23 @@
-const menuItems = [
-    {
-        id: 1,
-        name: "Coffee Latte",
-        price: 13000,
-        stock: 10,
-        image: "https://placehold.co/300x200/8B4513/FFFFFF?text=Coffee+Latte"
-    },
-    {
-        id: 2,
-        name: "Brown Sugar Coffee",
-        price: 13000,
-        stock: 0,
-        image: "https://placehold.co/300x200/8B4513/FFFFFF?text=Brown+Sugar+Coffee"
-    },
-    {
-        id: 3,
-        name: "Brown Sugar Latte",
-        price: 13000,
-        stock: 5,
-        image: "https://placehold.co/300x200/8B4513/FFFFFF?text=Brown+Sugar+Latte"
+import { supabase } from "./supabase.js";
+
+let menuItems = [];
+async function fetchMenuItems() {
+    const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("available", true)
+        .order("id");
+
+    if (error) {
+        console.error("Gagal mengambil data menu:", error.message);
+        return;
     }
-];
+
+    if (data) {
+        menuItems = data;
+        renderMenu();
+    }
+}
 
 function renderMenu() {
     const menuGrid = document.querySelector(".menu-grid");
@@ -64,7 +61,7 @@ function saveCart(cart) {
     localStorage.setItem("cofix-cart", JSON.stringify(cart));
 }
 
-function addToCart(menuId) {
+window.addToCart = function(menuId) {
     const cart = getCart();
     const menuItem = menuItems.find(function(item) {
         return item.id === menuId;
@@ -148,7 +145,7 @@ function renderCart() {
         totalContainer.innerHTML += '<a href="/checkout.html" style="display:inline-block; margin-top:12px; padding:12px 24px; background-color:#FF8F00; color:#3E2723; text-decoration:none; border-radius:4px; font-weight:bold;">Checkout</a>';
 }
 
-function renderCheckout() {
+window.renderCheckout = function() {
     const checkoutItems = document.getElementById("checkout-items");
     const checkoutTotal = document.getElementById("checkout-total");
 
@@ -184,7 +181,87 @@ function renderCheckout() {
     checkoutTotal.innerHTML = 'Total: Rp ' + total.toLocaleString("id-ID");
 }
 
-function removeFromCart(menuId) {
+window.submitOrder = async function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const method = document.getElementById("method").value;
+    const address = document.getElementById("address") 
+        ? document.getElementById("address").value.trim() 
+        : "";
+
+    if (!name || !phone || !method) {
+        alert("Mohon lengkapi data pemesan.");
+        return;
+    }
+
+    if (method === "delivery" && !address) {
+        alert("Mohon isi alamat untuk pengiriman.");
+        return;
+    }
+
+    const cart = getCart();
+
+    if (cart.length === 0) {
+        alert("Keranjang kosong. Silakan pilih menu terlebih dahulu.");
+        return;
+    }
+
+    let total = 0;
+    cart.forEach(function(item) {
+        total += item.price * item.quantity;
+    });
+
+    const { data: orderData, error: orderError } = await supabase
+        .from("orders")
+        .insert([
+            {
+                customer_name: name,
+                phone: phone,
+                method: method,
+                address: method === "delivery" ? address : null,
+                total: total,
+                status: "pending"
+            }
+        ])
+        .select("id")
+        .single();
+
+    if (orderError) {
+        console.error("Gagal menyimpan pesanan:", orderError.message);
+        alert("Gagal menyimpan pesanan. Silakan coba lagi.");
+        return;
+    }
+
+    const orderId = orderData.id;
+
+    const orderItems = cart.map(function(item) {
+        return {
+            order_id: orderId,
+            product_name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            subtotal: item.price * item.quantity
+        };
+    });
+
+    const { error: itemsError } = await supabase
+        .from("order_items")
+        .insert(orderItems);
+
+    if (itemsError) {
+        console.error("Gagal menyimpan item pesanan:", itemsError.message);
+        alert("Gagal menyimpan detail pesanan. Silakan coba lagi.");
+        return;
+    }
+
+    localStorage.removeItem("cofix-cart");
+    alert("Pesanan berhasil! Pesanan Anda akan segera diproses.");
+    window.location.href = "/";
+};
+
+window.removeFromCart = function(menuId) {
     let cart = getCart();
     cart = cart.filter(function(item) {
         return item.id !== menuId;
@@ -194,6 +271,6 @@ function removeFromCart(menuId) {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    renderMenu();
+    fetchMenuItems();
     renderCart();
 });
