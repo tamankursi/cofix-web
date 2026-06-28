@@ -1,0 +1,82 @@
+/* RESET CSS DASAR ================================================= */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* NAVIGASI ======================================================= */
+header {
+    background-color: #3E2723;
+    padding: 16px 0;
+}
+
+nav {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: #D7CCC8;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 24px;
+}
+
+nav ul li a {
+    color: #D7CCC8;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+nav ul li a:hover {
+    color: #FF8F00;
+}
+
+/* HERO ============================================================== */
+.hero {
+    background-color: #4E342E;
+    color: #EFEBE9;
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.hero h1 {
+    font-size: 36px;
+    margin-bottom: 16px;
+}
+
+.hero p {
+    font-size: 16px;
+    max-width: 600px;
+    margin: 0 auto 24px;
+}
+
+.hero a {
+    display: inline-block;
+    background-color: #FF8F00;
+    color: #3E2723;
+    text-decoration: none;
+    padding: 12px 32px;
+    border-radius: 4px;
+    font-weight: bold;
+}
