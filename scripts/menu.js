@@ -1,6 +1,7 @@
 import { supabase } from "./supabase.js";
 
 let menuItems = [];
+const EDGE_FUNCTION_URL = "https://lathuftssqgdxawjunwc.supabase.co/functions/v1/create-snap-token";
 async function fetchMenuItems() {
     const { data, error } = await supabase
         .from("products")
@@ -256,9 +257,41 @@ window.submitOrder = async function(event) {
         return;
     }
 
-    localStorage.removeItem("cofix-cart");
-    alert("Pesanan berhasil! Pesanan Anda akan segera diproses.");
-    window.location.href = "/";
+        const { data: snapData, error: snapError } = await supabase.functions.invoke("create-snap-token", {
+        body: {
+            order_id: "COFIX-" + orderId,
+            gross_amount: total,
+            customer_name: name,
+            customer_phone: phone,
+        },
+    });
+
+    if (snapError) {
+        console.error("Gagal membuat Snap Token:", snapError.message);
+        alert("Gagal memproses pembayaran. Silakan coba lagi.");
+        return;
+    }
+
+    const snapToken = snapData.token;
+
+    window.snap.pay(snapToken, {
+        onSuccess: function(result) {
+            localStorage.removeItem("cofix-cart");
+            alert("Pembayaran berhasil! Pesanan Anda akan segera diproses.");
+            window.location.href = "/";
+        },
+        onPending: function(result) {
+            localStorage.removeItem("cofix-cart");
+            alert("Pembayaran tertunda. Silakan selesaikan pembayaran Anda.");
+            window.location.href = "/";
+        },
+        onError: function(result) {
+            alert("Pembayaran gagal. Silakan coba lagi.");
+        },
+        onClose: function() {
+            alert("Anda menutup popup pembayaran. Pesanan tetap tersimpan dan bisa dibayar nanti.");
+        },
+    });
 };
 
 window.removeFromCart = function(menuId) {

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cofix - Dashboard Admin</title>
+    <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/" class="logo">COFIX</a>
+            <ul>
+                <li><a href="/admin.html">Dashboard</a></li>
+                <li><a href="#" id="logout-btn">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section style="max-width:1100px; margin:40px auto; padding:0 20px;">
+        <h2 style="color:#3E2723; margin-bottom:8px;">Dashboard Admin</h2>
+        <p style="color:#888; margin-bottom:24px;">Kelola pesanan dan menu Cofix</p>
+
+        <h3 style="color:#3E2723; margin-bottom:16px;">Daftar Pesanan</h3>
+        <div id="orders-list" style="margin-bottom:40px;">
+            <p style="color:#888;">Memuat pesanan...</p>
+        </div>
+
+                <h3 style="color:#3E2723; margin-bottom:16px;">Kelola Menu</h3>
+        <button id="btn-tambah-menu" style="padding:8px 16px; background-color:#FF8F00; color:#3E2723; border:none; border-radius:4px; font-weight:bold; cursor:pointer; margin-bottom:16px;">+ Tambah Menu Baru</button>
+        <div id="menu-list-admin">
+            <p style="color:#888;">Memuat menu...</p>
+        </div>
+
+        <div id="form-menu" style="display:none; background:#EFEBE9; padding:20px; border-radius:8px; margin-top:16px;">
+            <h4 id="form-title" style="color:#3E2723; margin-bottom:16px;">Tambah Menu</h4>
+            <input type="hidden" id="edit-id">
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div>
+                    <label for="menu-name" style="display:block; margin-bottom:4px; color:#3E2723;">Nama Menu</label>
+                    <input type="text" id="menu-name" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
+                </div>
+                <div>
+                    <label for="menu-price" style="display:block; margin-bottom:4px; color:#3E2723;">Harga (Rp)</label>
+                    <input type="number" id="menu-price" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
+                </div>
+                <div>
+                    <label for="menu-stock" style="display:block; margin-bottom:4px; color:#3E2723;">Stok</label>
+                    <input type="number" id="menu-stock" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button id="btn-simpan-menu" style="padding:10px 20px; background-color:#4CAF50; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">Simpan</button>
+                    <button id="btn-batal-menu" style="padding:10px 20px; background-color:#BDBDBD; color:#333; border:none; border-radius:4px; cursor:pointer;">Batal</button>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Cofix. Semua hak dilindungi.</p>
+    </footer>
+
+    <script type="module">
+        import { supabase } from "./scripts/supabase.js";
+
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = "/admin-login.html";
+                return;
+            }
+            loadOrders();
+                        loadMenu();
+        }
+
+        async function loadOrders() {
+            const ordersList = document.getElementById("orders-list");
+
+            const { data: orders, error } = await supabase
+                .from("orders")
+                .select("*")
+                .order("created_at", { ascending: false });
+
+            if (error) {
+                ordersList.innerHTML = '<p style="color:#D32F2F;">Gagal memuat pesanan.</p>';
+                return;
+            }
+
+            if (orders.length === 0) {
+                ordersList.innerHTML = '<p style="color:#888;">Belum ada pesanan.</p>';
+                return;
+            }
+
+            let html = "";
+            orders.forEach(function(order) {
+                html += `
+                    <div style="background:#EFEBE9; border-radius:8px; padding:16px; margin-bottom:12px;">
+                        <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                            <div>
+                                <strong>#${order.id}</strong> - ${order.customer_name}
+                                <span style="margin-left:8px; color:#888;">${order.phone}</span>
+                            </div>
+                            <div>
+                                <span style="background:#FF8F00; color:#3E2723; padding:4px 8px; border-radius:4px; font-size:12px;">${order.method}</span>
+                                <span style="margin-left:8px; background:#3E2723; color:#EFEBE9; padding:4px 8px; border-radius:4px; font-size:12px;">${order.status}</span>
+                            </div>
+                        </div>
+                        <div style="margin-top:8px; color:#3E2723; font-weight:bold;">
+                            Total: Rp ${order.total.toLocaleString("id-ID")}
+                        </div>
+                        ${order.address ? `<div style="margin-top:4px; color:#666; font-size:14px;">Alamat: ${order.address}</div>` : ""}
+                        <div style="margin-top:4px; color:#888; font-size:12px;">${new Date(order.created_at).toLocaleString("id-ID")}</div>
+                    </div>
+                `;
+            });
+
+            ordersList.innerHTML = html;
+        }
+
+                async function loadMenu() {
+            const menuList = document.getElementById("menu-list-admin");
+
+            const { data: menus, error } = await supabase
+                .from("products")
+                .select("*")
+                .order("id");
+
+            if (error) {
+                menuList.innerHTML = '<p style="color:#D32F2F;">Gagal memuat menu.</p>';
+                return;
+            }
+
+            if (menus.length === 0) {
+                menuList.innerHTML = '<p style="color:#888;">Belum ada menu.</p>';
+                return;
+            }
+
+            let html = "";
+            menus.forEach(function(menu) {
+                const statusBadge = menu.available 
+                    ? '<span style="background:#4CAF50; color:white; padding:2px 8px; border-radius:4px; font-size:12px;">Tersedia</span>'
+                    : '<span style="background:#BDBDBD; color:#333; padding:2px 8px; border-radius:4px; font-size:12px;">Disembunyikan</span>';
+                
+                const stockBadge = menu.stock === 0
+                    ? '<span style="background:#D32F2F; color:white; padding:2px 8px; border-radius:4px; font-size:12px;">Habis</span>'
+                    : '<span style="color:#666; font-size:14px;">Stok: ' + menu.stock + '</span>';
+
+                html += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:#EFEBE9; border-radius:8px; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+                        <div>
+                            <strong>${menu.name}</strong>
+                            <span style="margin-left:8px; color:#FF8F00; font-weight:bold;">Rp ${menu.price.toLocaleString("id-ID")}</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            ${statusBadge}
+                            ${stockBadge}
+                            <button onclick="editMenu(${menu.id}, '${menu.name}', ${menu.price}, ${menu.stock})" style="padding:4px 12px; background-color:#FF8F00; color:#3E2723; border:none; border-radius:4px; cursor:pointer; font-size:12px;">Edit</button>
+                            <button onclick="deleteMenu(${menu.id})" style="padding:4px 12px; background-color:#D32F2F; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">Hapus</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            menuList.innerHTML = html;
+        }
+
+        window.editMenu = function(id, name, price, stock) {
+            document.getElementById("form-menu").style.display = "block";
+            document.getElementById("form-title").textContent = "Edit Menu";
+            document.getElementById("edit-id").value = id;
+            document.getElementById("menu-name").value = name;
+            document.getElementById("menu-price").value = price;
+            document.getElementById("menu-stock").value = stock;
+        };
+
+        window.deleteMenu = async function(id) {
+            if (!confirm("Yakin ingin menghapus menu ini?")) {
+                return;
+            }
+
+            const { error } = await supabase
+                .from("products")
+                .delete()
+                .eq("id", id);
+
+            if (error) {
+                alert("Gagal menghapus menu: " + error.message);
+                return;
+            }
+
+            loadMenu();
+        };
+
+        document.getElementById("btn-tambah-menu").addEventListener("click", function() {
+            document.getElementById("form-menu").style.display = "block";
+            document.getElementById("form-title").textContent = "Tambah Menu";
+            document.getElementById("edit-id").value = "";
+            document.getElementById("menu-name").value = "";
+            document.getElementById("menu-price").value = "";
+            document.getElementById("menu-stock").value = "";
+        });
+
+        document.getElementById("btn-batal-menu").addEventListener("click", function() {
+            document.getElementById("form-menu").style.display = "none";
+        });
+
+        document.getElementById("btn-simpan-menu").addEventListener("click", async function() {
+            const id = document.getElementById("edit-id").value;
+            const name = document.getElementById("menu-name").value.trim();
+            const price = parseInt(document.getElementById("menu-price").value);
+            const stock = parseInt(document.getElementById("menu-stock").value);
+
+            if (!name || isNaN(price) || isNaN(stock)) {
+                alert("Mohon lengkapi semua field dengan benar.");
+                return;
+            }
+
+            if (id) {
+                const { error } = await supabase
+                    .from("products")
+                    .update({ name: name, price: price, stock: stock })
+                    .eq("id", id);
+
+                if (error) {
+                    alert("Gagal mengupdate menu: " + error.message);
+                    return;
+                }
+            } else {
+                const { error } = await supabase
+                    .from("products")
+                    .insert([{ name: name, price: price, stock: stock, available: true }]);
+
+                if (error) {
+                    alert("Gagal menambah menu: " + error.message);
+                    return;
+                }
+            }
+
+            document.getElementById("form-menu").style.display = "none";
+            loadMenu();
+        });
+
+        document.getElementById("logout-btn").addEventListener("click", async function() {
+            await supabase.auth.signOut();
+            window.location.href = "/admin-login.html";
+        });
+
+        checkSession();
+    </script>
+</body>
+</html>
