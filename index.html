@@ -25,23 +25,7 @@
 </section>
 <section class="menu-favorit">
     <h2>Menu Favorit</h2>
-    <div class="menu-grid">
-        <article class="menu-card">
-            <h3>Coffee Latte</h3>
-            <p>Rp 13.000</p>
-            <button>Tambah ke Keranjang</button>
-        </article>
-        <article class="menu-card">
-            <h3>Brown Sugar Coffee</h3>
-            <p>Rp 13.000</p>
-            <button>Tambah ke Keranjang</button>
-        </article>
-        <article class="menu-card">
-            <h3>Brown Sugar Latte</h3>
-            <p>Rp 13.000</p>
-            <button>Tambah ke Keranjang</button>
-        </article>
-    </div>
+    <div class="menu-grid"></div>
 </section>
 <section class="cerita-kami">
     <h2>Cerita Kami</h2>
@@ -71,5 +55,12 @@
 <footer>
     <p>&copy; 2024 Cofix. Semua hak dilindungi.</p>
 </footer>
+
+<script src="scripts/menu.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMenu();
+    });
+</script>
 </body>
 </html>
