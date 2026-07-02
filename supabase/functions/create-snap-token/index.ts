@@ -1,15 +1,14 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const MIDTRANS_SERVER_KEY = Deno.env.get("MIDTRANS_SERVER_KEY") || "";
-const MIDTRANS_API_URL = "https://app.sandbox.midtrans.com/snap/v1/transactions";
+const FONNTE_TOKEN = Deno.env.get("FONNTE_TOKEN") || "";
 
 serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
+    if (req.method === "OPTIONS") {
         return new Response(null, {
             headers: {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "POST",
-                "Access-Control-Allow-Headers": "Content-Type, Authorization, x-client-info, apikey, x-sb-client-info",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization, apikey, x-client-info",
             },
         });
     }
@@ -17,53 +16,65 @@ serve(async (req: Request) => {
     if (req.method !== "POST") {
         return new Response(
             JSON.stringify({ error: "Method not allowed" }),
-            { status: 405, headers: { "Content-Type": "application/json" } }
+            { status: 405, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
         );
     }
 
     try {
         const body = await req.json();
-        const { order_id, gross_amount, customer_name, customer_email, customer_phone } = body;
+        const { to, customer_name, order_id, items, total, method, address } = body;
 
-        const midtransPayload = {
-            transaction_details: {
-                order_id: order_id,
-                gross_amount: gross_amount,
-            },
-            customer_details: {
-                first_name: customer_name,
-                email: customer_email || "customer@cofix.com",
-                phone: customer_phone,
-            },
-        };
+        let messageText = `☕ *Pesanan Baru Cofix!*\n\n`;
+        messageText += `📦 *Order ID:* #${order_id}\n`;
+        messageText += `👤 *Pemesan:* ${customer_name}\n`;
+        messageText += `🛵 *Metode:* ${method === "delivery" ? "Delivery" : "Pick Up"}\n`;
 
-        const response = await fetch(MIDTRANS_API_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "Authorization": "Basic " + btoa(MIDTRANS_SERVER_KEY + ":"),
-            },
-            body: JSON.stringify(midtransPayload),
+        if (method === "delivery" && address) {
+            messageText += `📍 *Alamat:* ${address}\n`;
+        }
+
+        messageText += `\n📋 *Detail Pesanan:*\n`;
+        items.forEach(function(item: { name: string; quantity: number; subtotal: number }) {
+            messageText += `  - ${item.name} x${item.quantity} = Rp ${item.subtotal.toLocaleString("id-ID")}\n`;
         });
 
-        const data = await response.json();
+        messageText += `\n💰 *Total:* Rp ${total.toLocaleString("id-ID")}\n`;
+        messageText += `\n_Silakan cek dashboard untuk memproses pesanan._`;
 
-        if (response.ok) {
+        const formData = new FormData();
+        formData.append("target", to);
+        formData.append("message", messageText);
+        formData.append("countryCode", "62");
+
+        console.log("Sending to Fonnte with token:", FONNTE_TOKEN.substring(0, 5) + "...");
+
+        const response = await fetch("https://api.fonnte.com/send", {
+            method: "POST",
+            headers: {
+                "Authorization": FONNTE_TOKEN,
+            },
+            body: formData,
+        });
+
+        const result = await response.json();
+        console.log("Fonnte response:", JSON.stringify(result));
+
+        if (response.ok && result.status === true) {
             return new Response(
-    JSON.stringify({ token: data.token, redirect_url: data.redirect_url }),
-    { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
-);
+                JSON.stringify({ success: true, result: result }),
+                { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+            );
         } else {
             return new Response(
-    JSON.stringify({ error: data.error_messages || "Midtrans error" }),
-    { status: 400, headers: { "Content-Type": "application/json" } }
-);
+                JSON.stringify({ error: "Fonnte API error", detail: result }),
+                { status: 400, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+            );
         }
     } catch (error) {
-       return new Response(
-    JSON.stringify({ error: "Internal server error", detail: error.message }),
-    { status: 500, headers: { "Content-Type": "application/json" } }
-);
+        console.error("Error:", error.message);
+        return new Response(
+            JSON.stringify({ error: "Internal server error", detail: error.message }),
+            { status: 500, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+        );
     }
 });

@@ -1,0 +1,13 @@
+{
+  "routes": [
+    { "src": "/products.html", "dest": "/products.html" },
+    { "src": "/checkout.html", "dest": "/checkout.html" },
+    { "src": "/cerita-kami.html", "dest": "/cerita-kami.html" },
+    { "src": "/contact.html", "dest": "/contact.html" },
+    { "src": "/admin.html", "dest": "/admin.html" },
+    { "src": "/admin-login.html", "dest": "/admin-login.html" },
+    { "src": "/assets/(.*)", "dest": "/assets/$1" },
+    { "src": "/styles/(.*)", "dest": "/styles/$1" },
+    { "src": "/scripts/(.*)", "dest": "/scripts/$1" }
+  ]
+}

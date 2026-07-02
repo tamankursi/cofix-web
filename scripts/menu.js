@@ -209,6 +209,9 @@ window.submitOrder = async function(event) {
         return;
     }
 
+        const customerName = name;
+    const orderCart = [...cart];
+    
     let total = 0;
     cart.forEach(function(item) {
         total += item.price * item.quantity;
@@ -275,11 +278,36 @@ window.submitOrder = async function(event) {
     const snapToken = snapData.token;
 
     window.snap.pay(snapToken, {
-        onSuccess: function(result) {
-            localStorage.removeItem("cofix-cart");
-            alert("Pembayaran berhasil! Pesanan Anda akan segera diproses.");
-            window.location.href = "/";
+                        onSuccess: function(result) {
+            const messageText = `☕ *Pesanan Baru Cofix!*\n\n📦 *Order ID:* #COFIX-${orderId}\n👤 *Pemesan:* ${customerName}\n🛵 *Metode:* ${method === "delivery" ? "Delivery" : "Pick Up"}\n${method === "delivery" && address ? `📍 *Alamat:* ${address}\n` : ""}\n📋 *Detail Pesanan:*\n${orderCart.map(function(item) { return `  - ${item.name} x${item.quantity} = Rp ${(item.price * item.quantity).toLocaleString("id-ID")}`; }).join("\n")}\n\n💰 *Total:* Rp ${total.toLocaleString("id-ID")}\n\n_Silakan cek dashboard untuk memproses pesanan._`;
+
+            const formData = new FormData();
+            formData.append("target", "6285890058978");
+            formData.append("message", messageText);
+            formData.append("countryCode", "62");
+
+            fetch("https://api.fonnte.com/send", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Sm9hrEMG6ufUTE8BFqDP"
+                },
+                body: formData
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                console.log("Fonnte Response:", data);
+                localStorage.removeItem("cofix-cart");
+                alert("Pembayaran berhasil! Pesanan Anda akan segera diproses.");
+                window.location.href = "/";
+            })
+            .catch(function(error) {
+                console.error("Fonnte Error:", error);
+                localStorage.removeItem("cofix-cart");
+                alert("Pembayaran berhasil! Pesanan Anda akan segera diproses.");
+                window.location.href = "/";
+            });
         },
+        
         onPending: function(result) {
             localStorage.removeItem("cofix-cart");
             alert("Pembayaran tertunda. Silakan selesaikan pembayaran Anda.");

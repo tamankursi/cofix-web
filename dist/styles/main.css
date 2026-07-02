@@ -8,18 +8,16 @@
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     line-height: 1.6;
-    color: #1F150C;
-        background-color: #FBF9F5;
+    color: #333;
 }
 
 /* HOME PAGE START ================================================ */
 /* NAVIGASI ======================================================= */
 header {
-    background-color: #1F150C;
+    background-color: #3E2723;
     padding: 16px 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 nav {
@@ -32,7 +30,7 @@ nav {
 }
 
 .logo {
-    color: #E1DCC9;
+    color: #D7CCC8;
     text-decoration: none;
     font-size: 24px;
     font-weight: bold;
@@ -46,21 +44,21 @@ nav ul {
 }
 
 nav ul li a {
-    color: #E1DCC9;
+    color: #D7CCC8;
     text-decoration: none;
     font-size: 14px;
 }
 
 nav ul li a:hover {
-    color: #E1DCC9;
+    color: #FF8F00;
 }
 
 /* HERO ============================================================== */
 .hero {
-    background: linear-gradient(135deg, #1F150C 0%, #412D15 100%);
-    color: #FBF9F5;
+    background-color: #4E342E;
+    color: #EFEBE9;
     text-align: center;
-    padding: 100px 20px;
+    padding: 80px 20px;
 }
 
 .hero h1 {
@@ -76,19 +74,12 @@ nav ul li a:hover {
 
 .hero a {
     display: inline-block;
-    background-color: #E1DCC9;
-    color: #1F150C;
+    background-color: #FF8F00;
+    color: #3E2723;
     text-decoration: none;
-    padding: 14px 36px;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 16px;
-    transition: all 0.3s ease;
-}
-.hero a:hover {
-    background-color: #FBF9F5;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    padding: 12px 32px;
+    border-radius: 4px;
+    font-weight: bold;
 }
 
 /* MENU FAVORIT =================================================== */
@@ -101,7 +92,7 @@ nav ul li a:hover {
 .menu-favorit h2 {
     text-align: center;
     font-size: 28px;
-    color: #1F150C;
+    color: #3E2723;
     margin-bottom: 32px;
 }
 
@@ -112,26 +103,26 @@ nav ul li a:hover {
 }
 
 .menu-card {
-    background-color: #F5F3EC;
+    background-color: #EFEBE9;
     border-radius: 8px;
     padding: 24px;
     text-align: center;
 }
 
 .menu-card h3 {
-    color: #1F150C;
+    color: #3E2723;
     margin-bottom: 8px;
 }
 
 .menu-card p {
-    color: #1F150C;
+    color: #FF8F00;
     font-weight: bold;
     margin-bottom: 16px;
 }
 
 .menu-card button {
-    background-color: #1F150C;
-    color: #F5F3EC;
+    background-color: #3E2723;
+    color: #EFEBE9;
     border: none;
     padding: 10px 24px;
     border-radius: 4px;
@@ -140,19 +131,19 @@ nav ul li a:hover {
 }
 
 .menu-card button:hover {
-    background-color: #412D15;
+    background-color: #4E342E;
 }
 
 /* CERITA KAMI ======================================================== */
 .cerita-kami {
-    background-color: #F5F3EC;
+    background-color: #EFEBE9;
     padding: 60px 20px;
 }
 
 .cerita-kami h2 {
     text-align: center;
     font-size: 28px;
-    color: #1F150C;
+    color: #3E2723;
     margin-bottom: 32px;
 }
 
@@ -192,7 +183,7 @@ nav ul li a:hover {
 
 .contact h2 {
     font-size: 28px;
-    color: #1F150C;
+    color: #3E2723;
     margin-bottom: 16px;
 }
 
@@ -206,18 +197,18 @@ nav ul li a:hover {
 }
 
 .contact ul li a {
-    color: #1F150C;
+    color: #3E2723;
     text-decoration: none;
 }
 
 .contact ul li a:hover {
-    color: #E1DCC9;
+    color: #FF8F00;
 }
 
 /* FOOTER =========================================================== */
 footer {
-    background-color: #1F150C;
-    color: #E1DCC9;
+    background-color: #3E2723;
+    color: #D7CCC8;
     text-align: center;
     padding: 16px 20px;
     font-size: 14px;
@@ -226,8 +217,8 @@ footer {
 
 /* PRODUCT PAGE START =============================================== */
 .products-header {
-    background-color: #412D15;
-    color: #F5F3EC;
+    background-color: #4E342E;
+    color: #EFEBE9;
     text-align: center;
     padding: 60px 20px;
 }
@@ -246,8 +237,8 @@ footer {
 
 /* CERITA KAMI & CONTACT START ======================================== */
 .page-header {
-    background-color: #412D15;
-    color: #F5F3EC;
+    background-color: #4E342E;
+    color: #EFEBE9;
     text-align: center;
     padding: 60px 20px;
 }
@@ -304,11 +295,11 @@ footer {
 }
 
 .contact-detail ul li strong {
-    color: #1F150C;
+    color: #3E2723;
 }
 
 .contact-detail ul li a {
-    color: #E1DCC9;
+    color: #FF8F00;
     text-decoration: none;
 }
 
