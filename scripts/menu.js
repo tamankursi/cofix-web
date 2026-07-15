@@ -25,9 +25,9 @@ async function fetchMenuItems() {
 // ========== RENDER MENU ==========
 
 const localImages = {
-    "Coffee Latte": "/asset/Coffe Latte.png",
-    "Brown Sugar Coffee": "/asset/Brown Sugar Coffe.png",
-    "Brown Sugar Latte": "/asset/Brown Sugar Latte.png"
+    "Coffee Latte": "asset/Coffe Latte.png",
+    "Brown Sugar Coffee": "asset/Brown Sugar Coffe.png",
+    "Brown Sugar Latte": "asset/Brown Sugar Latte.png"
 };
 
 function renderMenu() {
@@ -204,7 +204,7 @@ function renderCart() {
 
     cartContainer.innerHTML = cartHTML;
     totalContainer.innerHTML = '<p style="font-size:18px; margin-top:12px;">Total: Rp ' + total.toLocaleString("id-ID") + '</p>';
-    totalContainer.innerHTML += '<a href="/checkout.html" style="display:inline-block; margin-top:12px; padding:12px 24px; background-color:#E1DCC9; color:#1F150C; text-decoration:none; border-radius:50px; font-weight:600;">Checkout</a>';
+    totalContainer.innerHTML += '<a href="checkout.html" style="display:inline-block; margin-top:12px; padding:12px 24px; background-color:#E1DCC9; color:#1F150C; text-decoration:none; border-radius:50px; font-weight:600;">Checkout</a>';
 }
 
 // ========== CHECKOUT ==========
@@ -217,7 +217,7 @@ window.renderCheckout = function () {
     const cart = getCart();
 
     if (cart.length === 0) {
-        checkoutItems.innerHTML = '<p style="color:#8C8C8C;">Keranjang kosong. <a href="/products.html">Lihat menu</a></p>';
+        checkoutItems.innerHTML = '<p style="color:#8C8C8C;">Keranjang kosong. <a href="products.html">Lihat menu</a></p>';
         checkoutTotal.innerHTML = "";
         document.getElementById("pay-button").disabled = true;
         return;
@@ -346,7 +346,7 @@ window.submitOrder = async function (event) {
         onPending: function () {
             localStorage.removeItem("cofix-cart");
             showToast("Pembayaran tertunda. Silakan selesaikan pembayaran Anda.");
-            window.location.href = "/";
+            window.location.href = "index.html";
         },
         onError: function () {
             showToast("Pembayaran gagal. Silakan coba lagi.");
@@ -388,7 +388,7 @@ function sendWhatsAppNotification(customerName, orderId, orderCart, total, metho
         .finally(function () {
             localStorage.removeItem("cofix-cart");
             showToast("Pembayaran berhasil! Pesanan akan segera diproses.");
-            window.location.href = "/";
+            window.location.href = "index.html";
         });
 }
 

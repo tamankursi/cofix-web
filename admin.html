@@ -7,15 +7,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/styles/main.css">
-    <script type="module" src="/scripts/navigation.js"></script>
+    <link rel="stylesheet" href="styles/main.css">
+    <script type="module" src="scripts/navigation.js"></script>
 </head>
 <body>
     <header>
         <nav>
-            <a href="/" class="logo">COFIX</a>
+            <a href="index.html" class="logo">COFIX</a>
             <ul>
-                <li><a href="/admin.html">Dashboard</a></li>
+                <li><a href="admin.html">Dashboard</a></li>
                 <li><a href="#" id="logout-btn">Logout</a></li>
             </ul>
 
@@ -73,7 +73,7 @@
         async function checkSession() {
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) {
-                window.location.href = "/admin-login.html";
+                window.location.href = "admin-login.html";
                 return;
             }
             loadOrders();
@@ -249,7 +249,7 @@
 
         document.getElementById("logout-btn").addEventListener("click", async function() {
             await supabase.auth.signOut();
-            window.location.href = "/admin-login.html";
+            window.location.href = "admin-login.html";
         });
 
         checkSession();
