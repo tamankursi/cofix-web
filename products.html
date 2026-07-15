@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles/main.css">
+    <script type="module" src="/scripts/navigation.js"></script>
 </head>
 <body>
     <header>
@@ -19,6 +20,8 @@
                 <li><a href="/cerita-kami.html">Cerita Kami</a></li>
                 <li><a href="/contact.html">Contact</a></li>
             </ul>
+
+                    <button id="hamburger" aria-label="Menu Utama" aria-expanded="false">☰</button>
         </nav>
     </header>
 
@@ -44,5 +47,7 @@
     </footer>
 
 <script type="module" src="./scripts/menu.js"></script>
+
+<div id="toast" style="position:fixed; bottom:24px; right:24px; background:#1F150C; color:#FBF9F5; padding:14px 24px; border-radius:8px; font-size:14px; font-weight:500; opacity:0; transform:translateY(20px); transition:all 0.3s ease; z-index:9999; pointer-events:none; box-shadow:0 4px 12px rgba(0,0,0,0.2);"></div>
 </body>
 </html>
